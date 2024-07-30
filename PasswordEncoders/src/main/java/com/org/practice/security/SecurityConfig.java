@@ -26,25 +26,28 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((requests) -> requests.requestMatchers("/my-account","/my-loans","/my-balance","/my-cards").authenticated()
-                        .requestMatchers("/notices","/contacts").permitAll());
+        http.
+                csrf(csrf->csrf.disable())
+                .authorizeHttpRequests((requests) -> requests.requestMatchers("/my-account","/my-loans","/my-balance","/my-cards").authenticated()
+                        .requestMatchers("/notices","/contacts","/register").permitAll());
         http.formLogin(fbc->fbc.disable());
         http.httpBasic(withDefaults());
         return http.build();
     }
-    @Bean
-    public UserDetailsService userDetailsService(DataSource dataSource) {
+//    @Bean
+//    public UserDetailsService userDetailsService(DataSource dataSource) {
 /*        UserDetails user = User.withUsername("user")
                 .password("{noop}12345")
                 .authorities("read")
                 .build();
         UserDetails admin = User.withUsername("admin")
-                .password("{bcrypt}$2a$12$lJxaXXV8hz.xB9vI27rvDe3BSQgb71xMQI638mz/n2W.GwgA8h28.")
+                .password("
+                $2a$12$lJxaXXV8hz.xB9vI27rvDe3BSQgb71xMQI638mz/n2W.GwgA8h28.")
                 .authorities("admin")
                 .build();
         return new InMemoryUserDetailsManager(user, admin);*/ //using inmemory storage
-        return new JdbcUserDetailsManager(dataSource);
-    }
+//        return new JdbcUserDetailsManager(dataSource);
+   // }
     @Bean
     public PasswordEncoder passwordEncoder(){
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
