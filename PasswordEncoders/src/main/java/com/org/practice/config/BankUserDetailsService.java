@@ -1,4 +1,4 @@
-package com.org.practice.security;
+package com.org.practice.config;
 
 import com.org.practice.model.Customer;
 import com.org.practice.repository.CustomerRepository;
