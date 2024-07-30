@@ -1,5 +1,7 @@
 package com.org.practice.config;
 
+import com.org.practice.exceptionhandling.CustomAccessDeniedHandler;
+import com.org.practice.exceptionhandling.CustomBasicAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -22,8 +24,11 @@ public class SecurityConfig {
                 .csrf(csrf->csrf.disable())
                 .authorizeHttpRequests((requests) -> requests.requestMatchers("/my-account","/my-loans","/my-balance","/my-cards").authenticated()
                         .requestMatchers("/notices","/contacts","/register").permitAll());
-        http.formLogin(fbc->fbc.disable());
-        http.httpBasic(withDefaults());
+        http.formLogin(fbc->fbc.disable()); //inside form login we canont basic authentication entrypoint bcz it doesnt deal with json
+        http.httpBasic(hbc -> hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()));//custom configuration fr basic authentication
+        http.exceptionHandling(ehc->ehc.accessDeniedHandler(new CustomAccessDeniedHandler()));
+
+
         return http.build();
     }
 //    @Bean
