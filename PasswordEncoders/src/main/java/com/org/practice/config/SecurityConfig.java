@@ -20,10 +20,11 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.requiresChannel(rcc->rcc.anyRequest().requiresInsecure()) //it will allow http requests
+        http.sessionManagement(smc->smc.invalidSessionUrl("/invalid-session")) //if session is invalid then it will redirect to invalid-session
+                .requiresChannel(rcc->rcc.anyRequest().requiresInsecure()) //it will allow http requests
                 .csrf(csrf->csrf.disable())
                 .authorizeHttpRequests((requests) -> requests.requestMatchers("/my-account","/my-loans","/my-balance","/my-cards").authenticated()
-                        .requestMatchers("/notices","/contacts","/register").permitAll());
+                        .requestMatchers("/notices","/contacts","/register","/invalid-session").permitAll());
         http.formLogin(fbc->fbc.disable()); //inside form login we canont basic authentication entrypoint bcz it doesnt deal with json
         http.httpBasic(hbc -> hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()));//custom configuration fr basic authentication
         http.exceptionHandling(ehc->ehc.accessDeniedHandler(new CustomAccessDeniedHandler()));

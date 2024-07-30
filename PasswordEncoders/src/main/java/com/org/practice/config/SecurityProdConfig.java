@@ -18,10 +18,11 @@ public class SecurityProdConfig {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.requiresChannel(rcc->rcc.anyRequest().requiresSecure())// only allow https requests
+        http.sessionManagement(smc->smc.invalidSessionUrl("/invalid-session"))
+                .requiresChannel(rcc->rcc.anyRequest().requiresSecure())// only allow https requests
         .csrf(csrf->csrf.disable())
                 .authorizeHttpRequests((requests) -> requests.requestMatchers("/my-account","/my-loans","/my-balance","/my-cards").authenticated()
-                        .requestMatchers("/notices","/contacts","/register").permitAll());
+                        .requestMatchers("/notices","/contacts","/register","/invalid-session").permitAll());
         http.formLogin(fbc->fbc.disable());
         http.httpBasic(withDefaults());
         return http.build();
