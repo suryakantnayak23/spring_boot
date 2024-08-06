@@ -20,15 +20,15 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.sessionManagement(smc->smc.invalidSessionUrl("/invalid-session")) //if session is invalid then it will redirect to invalid-session
+        http.sessionManagement(smc->smc.invalidSessionUrl("/invalid-session").maximumSessions(3).maxSessionsPreventsLogin(true)) //if session is invalid then it will redirect to invalid-session
                 .requiresChannel(rcc->rcc.anyRequest().requiresInsecure()) //it will allow http requests
                 .csrf(csrf->csrf.disable())
                 .authorizeHttpRequests((requests) -> requests.requestMatchers("/my-account","/my-loans","/my-balance","/my-cards").authenticated()
-                        .requestMatchers("/notices","/contacts","/register","/invalid-session").permitAll());
-        http.formLogin(fbc->fbc.disable()); //inside form login we canont basic authentication entrypoint bcz it doesnt deal with json
-        http.httpBasic(hbc -> hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()));//custom configuration fr basic authentication
+                        .requestMatchers("/notices","/contacts/**","/register","/invalid-session").permitAll());
+        http.formLogin(withDefaults()); //inside form login we canont basic authentication entrypoint bcz it doesnt deal with json
+        http.httpBasic(hbc -> hbc.authenticationEntryPoint(new CustomBasicAuthenticationEntryPoint()));//custom configuration fr basic authentication entry point
         http.exceptionHandling(ehc->ehc.accessDeniedHandler(new CustomAccessDeniedHandler()));
-
+// for session fixation through smc we can call sessionFixation().migrateSession() or sessionFixation().none()
 
         return http.build();
     }

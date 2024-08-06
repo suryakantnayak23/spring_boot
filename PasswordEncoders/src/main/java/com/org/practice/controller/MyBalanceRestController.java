@@ -4,11 +4,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/contacts")
 @RestController
-public class Contacts {
+@RequestMapping("/my-balance")
+public class MyBalanceRestController {
     @GetMapping
     public String hello(){
-        return "hello from contacts";
+        return "hello from my blnce";
+
     }
 }

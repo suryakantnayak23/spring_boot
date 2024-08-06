@@ -18,7 +18,7 @@ public class SecurityProdConfig {
 
     @Bean
     SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
-        http.sessionManagement(smc->smc.invalidSessionUrl("/invalid-session"))
+        http.sessionManagement(smc->smc.invalidSessionUrl("/invalid-session").maximumSessions(1).maxSessionsPreventsLogin(true))
                 .requiresChannel(rcc->rcc.anyRequest().requiresSecure())// only allow https requests
         .csrf(csrf->csrf.disable())
                 .authorizeHttpRequests((requests) -> requests.requestMatchers("/my-account","/my-loans","/my-balance","/my-cards").authenticated()

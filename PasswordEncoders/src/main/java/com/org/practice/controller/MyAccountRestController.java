@@ -4,11 +4,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RequestMapping("/notices")
 @RestController
-public class Notices {
+@RequestMapping("/my-account")
+public class
+MyAccountRestController {
     @GetMapping
     public String hello(){
-        return "hello from notices";
+        return "hello from my account";
     }
 }

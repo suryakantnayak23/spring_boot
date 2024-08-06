@@ -11,7 +11,9 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
-
+//for 401 Authentication exception:401
+//exception translation filter will handle this out
+//Authentication failure
 public class CustomBasicAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
